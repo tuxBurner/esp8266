@@ -11,12 +11,15 @@ _G[moduleName] = M
   -- CONSTANTS
   local MCP23017_ADDRESS = 0x20
   -- OLAT BANKS REG
-  local MCP23017_OLATA=0x14
-  local MCP23017_OLATB=0x15
+  local MCP23017_OLATA=0x12
+  local MCP23017_OLATB=0x13
   -- DIRECTIONS REG
   local MCP23017_IODIRA=0x00
   local MCP23017_IODIRB=0x01
-
+  -- PULLUP REG
+  local MCP23017_GPPUA=0x0C
+  local MCP23017_GPPUB=0x0D
+  
   local id=0
 
   -- writes to the given register address
@@ -27,7 +30,6 @@ _G[moduleName] = M
     i2c.write(id, reg_val)
     i2c.stop(id)
   end
-
   -- function for reading from the given bank
   local read_reg = function(bankAddr)
     i2c.start(id)
@@ -41,51 +43,57 @@ _G[moduleName] = M
     local val=string.byte(c)
     return val
   end
-
-
   -- sets the pin to the val on the given bank  
-  local setPinOnBank = function(bank,pin,val)
+  local writeValToBank = function(bank,pin,val)
     local bankVal=read_reg(bank)
-    local n = pin-1
-    if n>7 or n < 0 then
-      return
-    end
     if val == 0 then
-      bankVal = bit.clear(bankVal, n)
+      bankVal = bit.clear(bankVal, pin)
     end
     if val == 1 then
-      bankVal = bit.set(bankVal, n)
+      bankVal = bit.set(bankVal, pin)
     end  
     write_reg(bank,bankVal)
   end
-
   -- gets the value from the given pin
   local getPinOnBank = function(bank,pin)
     local bankVal=read_reg(bank)
-    local pinState = bit.band(bit.rshift(bankVal,pin-1),0x1)
+    local pinState = bit.band(bit.rshift(bankVal,pin),0x1)
     return pinState
   end
-
-  -- gets the current val at the bank
-  M.getPin =  function(pin,val)
-    local bank = MCP23017_OLATA
+  -- when the pin is bigger than 8 make it -8
+  local getPinNumber = function(pin) 
     if pin > 8 then
       pin = pin - 8
-      bank = MCP23017_OLATB
     end
+    return pin-1  
+  end  
+  local getBankReg = function(pin,bankAReg,bankBreg)
+    local bank = bankAReg
+    if pin > 8 then
+      bank = bankBreg
+    end
+    return bank
+  end
+  local writeDataToPin = function(pin,val,a_reg,b_reg)
+    local bank = getBankReg(pin,a_reg,b_reg)
+    pin = getPinNumber(pin)
+    writeValToBank(bank,pin,val)
+  end
+  -- gets the current val at the bank
+  M.getPin =  function(pin)
+    local bank = getBankReg(pin,MCP23017_OLATA,MCP23017_OLATB) 
+    pin = getPinNumber(pin)    
     return getPinOnBank(bank,pin)
   end
-
+  -- function for setting a pin to input or output
+  M.setUpPin = function(pin,dir,pu)
+    writeDataToPin(pin,dir,MCP23017_IODIRA,MCP23017_IODIRB)
+    writeDataToPin(pin,pu,MCP23017_GPPUA,MCP23017_GPPUB)
+  end
   -- set the val on the given pin
   M.setPin =  function(pin,val)
-    local bank = MCP23017_OLATA
-    if pin > 8 then
-      pin = pin - 8
-      bank = MCP23017_OLATB
-    end
-    setPinOnBank(bank,pin,val)
+    writeDataToPin(pin,val,MCP23017_OLATA,MCP23017_OLATB)
   end
-
   -- function for setup
   M.init = function(sda,scl)
     i2c.setup(id, sda, scl, i2c.SLOW)
@@ -94,5 +102,4 @@ _G[moduleName] = M
     write_reg(MCP23017_OLATA,0x00) -- all to low on A
     write_reg(MCP23017_OLATB,0x00) --all to low on B
   end
-
 return M 
