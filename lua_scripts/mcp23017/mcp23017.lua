@@ -46,11 +46,10 @@ _G[moduleName] = M
   -- sets the pin to the val on the given bank  
   local writeValToBank = function(bank,pin,val)
     local bankVal=read_reg(bank)
-    if val == 0 then
-      bankVal = bit.clear(bankVal, pin)
-    end
     if val == 1 then
       bankVal = bit.set(bankVal, pin)
+    else  
+      bankVal = bit.clear(bankVal, pin)
     end  
     write_reg(bank,bankVal)
   end
@@ -60,30 +59,22 @@ _G[moduleName] = M
     local pinState = bit.band(bit.rshift(bankVal,pin),0x1)
     return pinState
   end
-  -- when the pin is bigger than 8 make it -8
-  local getPinNumber = function(pin) 
-    if pin > 8 then
-      pin = pin - 8
-    end
-    return pin-1  
-  end  
-  local getBankReg = function(pin,bankAReg,bankBreg)
+  local getPinBankReg = function(pin,bankAReg,bankBreg)
     local bank = bankAReg
     if pin > 8 then
       bank = bankBreg
+      pin = pin - 8
     end
-    return bank
+    return pin-1,bank
   end
   local writeDataToPin = function(pin,val,a_reg,b_reg)
-    local bank = getBankReg(pin,a_reg,b_reg)
-    pin = getPinNumber(pin)
-    writeValToBank(bank,pin,val)
+    local bankPin,bank = getPinBankReg(pin,a_reg,b_reg)
+    writeValToBank(bank,bankPin,val)
   end
   -- gets the current val at the bank
   M.getPin =  function(pin)
-    local bank = getBankReg(pin,MCP23017_OLATA,MCP23017_OLATB) 
-    pin = getPinNumber(pin)    
-    return getPinOnBank(bank,pin)
+    local bankPin,bank = getPinBankReg(pin,MCP23017_OLATA,MCP23017_OLATB)
+    return getPinOnBank(bank,bankPin)
   end
   -- function for setting a pin to input or output
   M.setUpPin = function(pin,dir,pu)
