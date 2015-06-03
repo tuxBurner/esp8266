@@ -25,15 +25,14 @@ local write_reg = function(bankAddr, reg_val)
   i2c.start(id)
   i2c.address(id, MCP23017_ADDRESS, i2c.TRANSMITTER)    
   i2c.write(id, bankAddr)
-  i2c.write(id, reg_val)
+  if(reg_val >= 0) then
+    i2c.write(id, reg_val)
+  end
   i2c.stop(id)
 end
 -- function for reading from the given bank
 local read_reg = function(bankAddr)
-  i2c.start(id)
-  i2c.address(id, MCP23017_ADDRESS, i2c.TRANSMITTER)    
-  i2c.write(id, bankAddr)
-  i2c.stop(id)
+  write_reg(bankAddr,-1)
   i2c.start(id)
   i2c.address(id, MCP23017_ADDRESS,i2c.RECEIVER)
   local val=string.byte(i2c.read(id,1))

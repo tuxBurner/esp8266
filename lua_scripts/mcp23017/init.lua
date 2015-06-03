@@ -16,12 +16,8 @@ function showButtons()
     local diff = tmr.now() - start
     if(start < 0 or diff > 1000000) then
       print(wifi.STATION)
-      local ledState = mcp.getPin(1)      
-      if(ledState == 0) then
-        mcp.setPin(1,1)
-      else
-        mcp.setPin(1,0)
-      end
+      local ledState = mcp.getPin(1)    
+      mcp.setPin(1,bit.bxor(ledState,1))
       start = now
     end  
   else  
