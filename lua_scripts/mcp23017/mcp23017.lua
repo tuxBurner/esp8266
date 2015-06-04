@@ -19,6 +19,9 @@ local MCP23017_IODIRB=0x01
 -- PULLUP REG
 local MCP23017_GPPUA=0x0C
 local MCP23017_GPPUB=0x0D
+-- POL REG
+local MCP23017_IPOLA=0x02
+local MCP23017_IPOLB=0x03
 local id=0
 -- writes to the given register address
 local write_reg = function(bankAddr, reg_val)
@@ -72,6 +75,7 @@ end
 M.setUpPin = function(pin,dir,pu)
   writeDataToPin(pin,dir,MCP23017_IODIRA,MCP23017_IODIRB)
   writeDataToPin(pin,pu,MCP23017_GPPUA,MCP23017_GPPUB)
+  writeDataToPin(pin,dir,MCP23017_IPOLA,MCP23017_IPOLB)
 end
 -- set the val on the given pin
 M.setPin =  function(pin,val)
@@ -81,8 +85,11 @@ end
 M.init = function(sda,scl)
   i2c.setup(id, sda, scl, i2c.SLOW)
   write_reg(MCP23017_IODIRA, 0x00) -- set bank A to output
-  write_reg(MCP23017_IODIRB, 0x00) -- set bank B to output
-  write_reg(MCP23017_OLATA,0x00) -- all to low on A
-  write_reg(MCP23017_OLATB,0x00) --all to low on B
+  write_reg(MCP23017_IODIRB, 0x00) -- set bank B to output 
+  write_reg(MCP23017_OLATA, 0x00) -- all values to 0
+  write_reg(MCP23017_OLATB, 0x00) -- all values to 0
+  write_reg(MCP23017_IPOLA, 0x00) -- all values to 0
+  write_reg(MCP23017_IPOLB, 0x00) -- all values to 0
+  collectgarbage()
 end
 return M 
