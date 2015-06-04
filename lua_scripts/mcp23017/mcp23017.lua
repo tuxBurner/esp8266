@@ -39,20 +39,6 @@ local read_reg = function(bankAddr)
   i2c.stop(id)
   return val
 end
--- sets the pin to the val on the given bank  
-local writeValToBank = function(bank,pin,val)
-  local bankVal=read_reg(bank)
-  if val == 1 then
-    bankVal = bit.set(bankVal, pin)
-  else  
-    bankVal = bit.clear(bankVal, pin)
-  end  
-  write_reg(bank,bankVal)
-end
--- gets the value from the given pin
-local getPinOnBank = function(bank,pin)
-  return bit.band(bit.rshift(read_reg(bank),pin),0x1)
-end
 -- returns the reg addr and the pin number
 local getPinBankReg = function(pin,bankAReg,bankBreg)
   local bank = bankAReg
@@ -65,8 +51,18 @@ end
 -- writes the given data to the given pin
 local writeDataToPin = function(pin,val,a_reg,b_reg)
   local bankPin,bank = getPinBankReg(pin,a_reg,b_reg)
-  writeValToBank(bank,bankPin,val)
-end  
+  local bankVal=read_reg(bank)
+  if val == 1 then
+    bankVal = bit.set(bankVal, bankPin)
+  else  
+    bankVal = bit.clear(bankVal, bankPin)
+  end  
+  write_reg(bank,bankVal)
+end
+-- gets the value from the given pin
+local getPinOnBank = function(bank,pin)
+  return bit.band(bit.rshift(read_reg(bank),pin),0x1)
+end
 -- gets the current val at the bank
 M.getPin =  function(pin)
   local bankPin,bank = getPinBankReg(pin,MCP23017_OLATA,MCP23017_OLATB)
