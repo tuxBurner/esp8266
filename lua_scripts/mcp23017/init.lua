@@ -5,9 +5,7 @@ mcp = require("mcp23017")
 mcp.init(3,4)
 -- set pin to input
 mcp.setUpPin(9,1,1)
-
 start = -1
-
 function showButtons()
   -- negate the output
   local state = bit.bxor(mcp.getPin(9),1)
