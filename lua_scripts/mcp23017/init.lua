@@ -4,8 +4,6 @@
 mcp = require("mcp23017")
 mcp.init(3,4)
 mcp.setUpPin(9,1,1)
--- set pin to input and pullup
-print('Okay')
 function showButtons()
   -- negate the output
   local state = mcp.getPin(9)
