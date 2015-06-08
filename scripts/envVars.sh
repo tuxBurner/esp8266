@@ -7,6 +7,9 @@
 # UART DEV
 ESP_PORT="/dev/ttyUSB0"
 
+# UART SPEED
+ESP_SPEED=9600
+
 # base dir
 BASE_DIR=$PWD
 
@@ -23,6 +26,9 @@ NODEMCU_FMW="https://github.com/nodemcu/nodemcu-firmware/releases/download/0.9.6
 
 # path for the esptool
 ESP_TOOL_DIR=$DATA_DIR"/esptool"
+
+# path for nodemcu-uploader
+NODEMCU_UPLOADER_DIR=$DATA_DIR"/nodemcu-uploader"
 
 ##############################################################
 ### Checks out a git repo when not existing or updates it ###
@@ -42,4 +48,21 @@ function cloneOrUpdateGit() {
     git pull origin master
     cd  $BASE_DIR
   fi
+}
+
+#################################################
+### Checkout the nodemcu-uploader from github ###
+#################################################
+function getOrUpdateNodemcuUploader() {
+  cloneOrUpdateGit "https://github.com/kmpm/nodemcu-uploader.git" $NODEMCU_UPLOADER_DIR
+}
+
+##########################################################
+### Uloads files to the esp                            ###
+### param1: files to upload check nodemcu-uploader doc ###
+##########################################################
+function uploadToESP() {
+  getOrUpdateNodemcuUploader
+  local files_to_upload=$1
+  $NODEMCU_UPLOADER_DIR/nodemcu-uploader.py -b $ESP_SPEED -p $ESP_PORT upload $files_to_upload
 }
