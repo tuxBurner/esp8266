@@ -7,12 +7,13 @@ ESP8266 supports firmware updates over the same serial interface with a few chan
 
 
 ## Install Firmware
-sudo python esptool.py --port /dev/ttyUSB0  write_flash 0x00000 ../nodemcu_latest.bin
-
+wget https://github.com/nodemcu/nodemcu-firmware/releases/download/0.9.6-dev_20150406/nodemcu_integer_0.9.6-dev_20150406.bin
+sudo python esptool.py --port /dev/ttyUSB0  write_flash 0x00000 nodemcu_integer_0.9.6-dev_20150406.bin
 
 ## Tools To use
 * ESPlorer:http://esp8266.ru/esplorer/ a good IDE makes life easier :)
 * nodemcu-uploader: https://github.com/kmpm/nodemcu-uploader easy way to upload files
+* esptool: https://github.com/themadinventor/esptool
 
 ## Links
 * GitHub Repos Search: https://github.com/search?utf8=%E2%9C%93&q=nodemcu
