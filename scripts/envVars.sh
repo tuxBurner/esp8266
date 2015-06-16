@@ -23,6 +23,7 @@ fi
 
 # LINK TO THE NODEMCU Firmware
 NODEMCU_FMW="https://github.com/nodemcu/nodemcu-firmware/releases/download/0.9.6-dev_20150406/nodemcu_integer_0.9.6-dev_20150406.bin"
+#NODEMCU_FMW="https://github.com/nodemcu/nodemcu-firmware/releases/download/0.9.5_20150318/nodemcu_integer_0.9.5_20150318.bin"
 
 # path for the esptool
 ESP_TOOL_DIR=$DATA_DIR"/esptool"
