@@ -67,3 +67,11 @@ function uploadToESP() {
   local files_to_upload=$1
   $NODEMCU_UPLOADER_DIR/nodemcu-uploader.py -b $ESP_SPEED -p $ESP_PORT upload $files_to_upload
 }
+
+########################################
+### Checkout the esptool from github ###
+########################################
+function getOrUpdateEspTool() {
+  cloneOrUpdateGit "https://github.com/themadinventor/esptool.git" $ESP_TOOL_DIR
+}
+

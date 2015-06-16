@@ -20,13 +20,6 @@ function downloadFirmWare() {
   cp "v0.9.5.2 AT Firmware.bin" $FMW_DEST_FILE
 }
 
-#########################################
-### Checkout the esptool from github ###
-########################################
-function getOrUpdateEspTool() {
-  cloneOrUpdateGit "https://github.com/themadinventor/esptool.git" $ESP_TOOL_DIR
-}
-
 ##########################################
 ### Flashes the ESP wit the firmeware ###
 #########################################
@@ -37,5 +30,5 @@ function flashESP() {
 }
 
 downloadFirmWare
-#getOrUpdateEspTool
+getOrUpdateEspTool
 flashESP

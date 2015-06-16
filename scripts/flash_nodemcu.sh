@@ -20,13 +20,6 @@ function downloadFirmWare() {
   wget -nv $NODEMCU_FMW  -O $FMW_DEST_FILE
 }
 
-#########################################
-### Checkout the esptool from github ###
-########################################
-function getOrUpdateEspTool() {
-  cloneOrUpdateGit "https://github.com/themadinventor/esptool.git" $ESP_TOOL_DIR
-}
-
 ##########################################
 ### Flashes the ESP wit the firmeware ###
 #########################################
