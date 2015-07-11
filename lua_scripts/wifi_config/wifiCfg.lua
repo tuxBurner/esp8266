@@ -64,7 +64,38 @@ local setupCfg = function()
   end  
   jsonCfg=nil
   collectgarbage()
-end
+end --eo setupCfg
+local callBackHandler = function(callback)
+  if(not callback) then  
+    return
+  end
+  if wifi.getmode() == wifi.SOFTAP then -- when in softap mode no need to start timer
+    callback()
+    collectgarbage()
+    return
+  end
+  local joinCounter = 0
+  local joinMaxAttempts = 5
+  tmr.alarm(0, 3000, 1, function()
+    local ip = wifi.sta.getip()
+    if ip == nil and joinCounter < joinMaxAttempts then
+      print('Connecting to WiFi Access Point ...')
+      joinCounter = joinCounter +1
+    else
+      if joinCounter == joinMaxAttempts then
+        print('Faild to connect to WiFi Access Point.')
+      else
+        print('IP: ',ip)
+        callback()
+        collectgarbage()
+      end
+      tmr.stop(0)
+      joinCounter = nil
+      joinMaxAttempts = nil
+      collectgarbage()
+    end
+  end)--eo tmr
+end --eo callBackHandler
 -- restarts all wifi settings
 M.setup = function(callback)
   setupCfg()
@@ -79,9 +110,7 @@ M.setup = function(callback)
   if  wifiConfig.mode == wifi.STATIONAP or wifiConfig.mode == wifi.STATION then
     wifi.sta.config(wifiConfig.stationPointConfig.ssid, wifiConfig.stationPointConfig.pwd)    
   end
-  collectgarbage()
-  if(callback) then
-    callback()
-  end
+  collectgarbage()  
+  callBackHandler(callback)
 end
 return M 
