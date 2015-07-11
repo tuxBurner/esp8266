@@ -1,11 +1,11 @@
 {
-  "ap" : {
+  "ap": {
     "en": true,
-    "pwd" : ""
+    "pwd": ""
   },
-  "st" : {
+  "st": {
     "en": true,
-    "pwd" : "",
-    "ssid" : ""
+    "pwd": "leatomhannes",
+    "ssid": "suckOnMe"
   }
 }
