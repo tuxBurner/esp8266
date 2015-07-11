@@ -15,23 +15,7 @@ serverFiles = nil
 collectgarbage()
 -- eo compile
 
-mcp = require("mcp23017")
-mcp.init(3,4)
-
-function handleReq(cn,params)
-  for name, value in pairs(params) do
-   mcp.setPin(tonumber(name),tonumber(value))
-  end
-  cn:send("<form method=\"get\"><ol>")
-  for i=1,16 do 
-    local state = mcp.getPin(i)
-    local opState = 0
-    if state == 0 then opState = 1 end 
-    cn:send("<li><button name=\""..i.."\" value=\""..opState.."\">"..state.."</button></li>")
-  end
-  cn:send("</ol></form>")
-  collectgarbage()
-end
+handleReq = require("http_index")
 
 -- setup wifi
 function wifiFinishCallback() -- is called when wifi is ready
