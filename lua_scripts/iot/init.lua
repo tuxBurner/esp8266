@@ -15,6 +15,15 @@ serverFiles = nil
 collectgarbage()
 -- eo compile
 -- setup wifi
+function wifiFinishCallback() -- is called when wifi is ready
+  print("started the esp")
+  dofile("httpserver.lc")(80)
+  collectgarbage()
+end --eo wifiFinishCallback
+
+
 wifiCfg=require('wifiCfg')
-wifiCfg.setup()
+wifiCfg.setup(wifiFinishCallback)
+wifiCfg=nil
+collectgarbage()
 --eo wifi
