@@ -25,7 +25,7 @@ function downloadFirmWare() {
 #########################################
 function flashESP() {
   cd $ESP_TOOL_DIR
-  sudo python esptool.py --port $ESP_PORT  write_flash 0x00000 ../firmware.bin
+  python esptool.py --port $ESP_PORT  write_flash 0x00000 ../firmware.bin
   cd $BASE_DIR
 }
 
