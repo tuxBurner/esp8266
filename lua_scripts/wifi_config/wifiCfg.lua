@@ -63,9 +63,10 @@ local setupCfg = function()
    end
   end  
   jsonCfg=nil
+  collectgarbage()
 end
 -- restarts all wifi settings
-M.setup = function()
+M.setup = function(callback)
   setupCfg()
   wifi.setmode(wifiConfig.mode)
   print('set (mode='..wifi.getmode()..')')
@@ -79,5 +80,8 @@ M.setup = function()
     wifi.sta.config(wifiConfig.stationPointConfig.ssid, wifiConfig.stationPointConfig.pwd)    
   end
   collectgarbage()
+  if(callback) then
+    callback()
+  end
 end
 return M 
