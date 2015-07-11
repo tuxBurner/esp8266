@@ -7,15 +7,12 @@
 # include the env vars
 . ./envVars.sh
 
-
-
-
 #################################################
 ### Checkout the http-server from github ###
 #################################################
 HTTP_SERVER_DIR=$DATA_DIR"/httpserver"
 function getOrUpdateHttpServer() {
-  cloneOrUpdateGit "https://github.com/marcoskirsch/nodemcu-httpserver.git" $HTTP_SERVER_DIR
+  cloneOrUpdateGit "https://github.com/tuxBurner/nodemcu-httpserver.git" $HTTP_SERVER_DIR
 }
 
 ################################################
