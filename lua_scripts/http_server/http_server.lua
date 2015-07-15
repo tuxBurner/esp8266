@@ -43,17 +43,23 @@ end
 local connect = function (conn, data)
   conn:on ("receive", function (cn, req_data)
     local params = getHttpReq (req_data)
+    local _, _, method, path, vars = string.find(req_data, "([A-Z]+) (.+)?(.+) HTTP");
+    if(method == nil)then
+      _, _, method, path = string.find(req_data, "([A-Z]+) (.+) HTTP");
+    end
+        
     cn:send("HTTP/1.1 200/OK\r\nServer: NodeLuau\r\nContent-Type: text/json\r\n\r\n")
     cn:send("{ \"chipInfo\" : { \"chipId\": "..node.chipid())
     cn:send(", \"heap\": "..node.heap())
+    cn:send(",\"uptime\": "..tmr.now())
     cn:send("}")
-    if(_requestHandler) then
+    if(_requestHandler ~= nil and path == "/action") then
       _requestHandler(cn,params)
     end
     cn:send("}")
     params = nil
     collectgarbage()
-    cn:close ( )
+    cn:close()
   end)
 end -- eo connect
 

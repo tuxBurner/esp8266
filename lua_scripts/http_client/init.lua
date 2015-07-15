@@ -15,14 +15,13 @@ serverFiles = nil
 collectgarbage()
 -- eo compile
 
-handleReq = require("traffic")
-
 -- setup wifi
 function wifiFinishCallback() -- is called when wifi is ready
   print("started the esp")
-  httpserver=require('http_server')
-  httpserver.init(80,handleReq)
-  collectgarbage()
+  sk=net.createConnection(net.TCP, 0) 
+  sk:on("receive", function(sck, c) print(c) end )
+  sk:connect(80,"http://raw.githubusercontent.com") 
+  sk:send("GET /nodemcu/nodemcu-firmware/master/LICENSE HTTP/1.1\r\nHost: "..wifi.sta.getip().."\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n")
 end --eo wifiFinishCallback
 wifiCfg=require('wifiCfg')
 wifiCfg.setup(wifiFinishCallback)

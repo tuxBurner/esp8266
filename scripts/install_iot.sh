@@ -12,7 +12,7 @@
 ################################################
 function uploadIot() {
 
-  local files=( 'iot/init.lua' 'wifi_config/wifiCfg.lc' 'wifi_config/wifi_cfg.json' 'http_server/http_server.lua')
+  local files=( 'iot/init.lua' 'wifi_config/wifiCfg.lc' 'wifi_config/wifi_cfg.json' 'http_server/http_server.lua' 'mcp23017/mcp23017.lc')
   local upl_files=""
   for i in "${files[@]}"
   do
