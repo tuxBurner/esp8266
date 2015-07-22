@@ -20,3 +20,4 @@ sudo python esptool.py --port /dev/ttyUSB0  write_flash 0x00000 nodemcu_integer_
 * https://github.com/NodeUSB/nodemcu-ide has a nice idea how to pull scripts from a ws
 * https://github.com/marcoskirsch/nodemcu-httpserver nice http server
 * Original Firmare: http://www.electrodragon.com/w/ESP8266_AT-command_firmware
+* NodeMcu Custom Builds: http://frightanic.com/nodemcu-custom-build/
