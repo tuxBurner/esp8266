@@ -30,9 +30,9 @@ function dispatch(m,t,pl)
 end
 function trafficFunc(m,pl)
   local color = pl
-  if(color == nil) then 
+  if(color == nil) then
     color = "red"
-  end  
+  end
   if(color == "red") then
     gpio.write(led1, gpio.HIGH);
     gpio.write(led2, gpio.HIGH);
@@ -43,7 +43,7 @@ function trafficFunc(m,pl)
     gpio.write(led1, gpio.LOW);
     gpio.write(led2, gpio.HIGH);
   end
-  print("set light to:"..color)  
+  print("set light to:"..color)
 end
 m_dis["/traffic"]=trafficFunc
 
@@ -51,16 +51,16 @@ m_dis["/traffic"]=trafficFunc
 -- setup wifi
 function wifiFinishCallback() -- is called when wifi is ready
   print("started the esp")
-  
-   m=mqtt.Client("nodemcu"..node.chipid(),60,"test","test123")   
+
+   m=mqtt.Client("nodemcu"..node.chipid(),60)   
    m:lwt("/lwt", "offline: "..node.chipid(), 0, 0) --lastwill
    m:connect("192.168.0.2",1883,0)
    m:on("connect",function(m)
-     print("connected to mqtt broker")         
+     print("connected to mqtt broker")
      m:subscribe("/traffic",0,function(m) print("sub done") end)
    end)
    m:on("message",dispatch )
-  
+
   collectgarbage()
 end --eo wifiFinishCallback
 wifiCfg=require('wifiCfg')
