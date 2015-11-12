@@ -28,19 +28,23 @@ function trafficFunc(m,pl)
   end
   print("set light to:"..color)
 end
-m_dis["/traffic"]=trafficFunc
-
+m_dis["/vls/traffic"]=trafficFunc
 
 -- setup wifi
 function wifiFinishCallback() -- is called when wifi is ready
   print("started the esp")
 
-   m=mqtt.Client("nodemcu"..node.chipid(),120)   
+   m=mqtt.Client("nodemcu"..node.chipid(),120)
    m:lwt("/lwt", "offline: "..node.chipid(), 0, 0) --lastwill
-   m:connect("192.168.0.3",1883,0)
+   m:connect("mqtt.micromata.priv",1883,0)
    m:on("connect",function(m)
-     print("connected to mqtt broker")     
-        m:subscribe("/traffic",0,function(m) print("sub done") end)
+     print("connected to mqtt broker")
+     m:subscribe("/vls/traffic",0,function(m) print("sub to traffic done") end)
+     tmr.alarm(0,1000*60*15,0,function()
+        print("Restarting node cause of offline bug")
+       node.restart()
+     end)
+
    end)
    m:on("message",dispatch )
 
